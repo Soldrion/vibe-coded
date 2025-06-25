@@ -1,3 +1,3 @@
-# vibe coded or projects that use AI to get the basic framework started
+# projects using AI to get the basic framework started 
 
 thing tracker readme in the files
