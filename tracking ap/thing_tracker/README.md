@@ -15,6 +15,7 @@ Supported platforms: Linux, Windows, Mac
 ### Linux:
 
 You need pyinstaller
+
 Run this in your terminal emulator:
 ```
 git clone https://github.com/Soldrion/vibe-coded/tree/main
