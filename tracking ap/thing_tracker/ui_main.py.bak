@@ -1,12 +1,11 @@
 import sys
 import os
 import subprocess
-import requests
 from PyQt5.QtWidgets import (
     QWidget, QMainWindow, QVBoxLayout, QHBoxLayout,
     QLineEdit, QPushButton, QTreeWidget, QTreeWidgetItem,
     QComboBox, QDateEdit, QCheckBox, QLabel, QCalendarWidget,
-    QTimeEdit, QMessageBox, QApplication
+    QTimeEdit, QMessageBox
 )
 from PyQt5.QtCore import Qt, QDate, QTime
 from tracker_model import TrackedItem
@@ -20,8 +19,6 @@ except ImportError:
 
 
 class MainWindow(QMainWindow):
-    APP_VERSION = "1.0.0"
-
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Thing Tracker")
@@ -39,6 +36,7 @@ class MainWindow(QMainWindow):
         main_layout = QVBoxLayout()
         central.setLayout(main_layout)
 
+        # Top input and buttons layout
         input_layout = QHBoxLayout()
 
         input_layout.addWidget(QLabel("Name:"))
@@ -77,7 +75,7 @@ class MainWindow(QMainWindow):
         input_layout.addWidget(QLabel("End Time:"))
         self.end_time_input = QTimeEdit()
         self.end_time_input.setDisplayFormat("HH:mm")
-        self.end_time_input.setTime(QTime.currentTime().addSecs(3600))  # +1 hour default
+        self.end_time_input.setTime(QTime.currentTime().addSecs(3600))  # default +1 hour
         input_layout.addWidget(self.end_time_input)
 
         input_layout.addWidget(QLabel("Done?"))
@@ -88,16 +86,19 @@ class MainWindow(QMainWindow):
         self.add_button.clicked.connect(self.add_item)
         input_layout.addWidget(self.add_button)
 
+        # Update button to launch updater.py and quit app
         self.update_button = QPushButton("Update App")
         self.update_button.clicked.connect(self.run_update_helper)
         input_layout.addWidget(self.update_button)
 
+        # Button to manually check notifications
         self.notify_button = QPushButton("Check Notifications")
         self.notify_button.clicked.connect(self.check_notifications)
         input_layout.addWidget(self.notify_button)
 
         main_layout.addLayout(input_layout)
 
+        # Search bar layout
         search_layout = QHBoxLayout()
         self.search_bar = QLineEdit()
         self.search_bar.setPlaceholderText("Search by name or tag...")
@@ -106,6 +107,7 @@ class MainWindow(QMainWindow):
         search_layout.addWidget(self.search_bar)
         main_layout.addLayout(search_layout)
 
+        # Task list tree
         self.tree = QTreeWidget()
         self.tree.setColumnCount(8)
         self.tree.setHeaderLabels([
@@ -115,6 +117,7 @@ class MainWindow(QMainWindow):
         self.tree.itemChanged.connect(self.handle_item_changed)
         main_layout.addWidget(self.tree)
 
+        # Calendar filter
         self.calendar = QCalendarWidget()
         self.calendar.selectionChanged.connect(self.refresh_list)
         main_layout.addWidget(QLabel("Filter from Due Date:"))
@@ -182,14 +185,16 @@ class MainWindow(QMainWindow):
             ])
             row.setFlags(row.flags() | Qt.ItemIsUserCheckable | Qt.ItemIsEnabled)
             row.setCheckState(7, Qt.Checked if i.completed else Qt.Unchecked)
+
             self.tree.addTopLevelItem(row)
 
         self.tree.blockSignals(False)
-        self.tree.sortItems(2, Qt.AscendingOrder)  # Sort by Start Date
+        self.tree.sortItems(2, Qt.AscendingOrder)  # Sort by Start Date (leftmost)
 
     def handle_item_changed(self, item, column):
         if column == 7:  # Done checkbox toggled
             name = item.text(0)
+            tags = item.text(1)
             start_date = item.text(2)
             start_time = item.text(3)
             due = item.text(4)
@@ -197,9 +202,8 @@ class MainWindow(QMainWindow):
             checked = item.checkState(7) == Qt.Checked
 
             for tracked in self.items:
-                if (tracked.name == name and tracked.due_date == due and
-                    tracked.start_date == start_date and tracked.start_time == start_time
-                    and tracked.end_time == end_time):
+                if (tracked.name == name and tracked.due_date == due and tracked.start_date == start_date
+                        and tracked.start_time == start_time and tracked.end_time == end_time):
                     tracked.completed = checked
                     save_items(self.items)
                     break
@@ -217,9 +221,8 @@ class MainWindow(QMainWindow):
                 end_time = item.text(5)
 
                 for tracked in self.items:
-                    if (tracked.name == name and tracked.due_date == due and
-                        tracked.start_date == start_date and tracked.start_time == start_time
-                        and tracked.end_time == end_time):
+                    if (tracked.name == name and tracked.due_date == due and tracked.start_date == start_date
+                            and tracked.start_time == start_time and tracked.end_time == end_time):
                         self.items.remove(tracked)
                         break
             save_items(self.items)
@@ -229,7 +232,7 @@ class MainWindow(QMainWindow):
 
     def check_notifications(self):
         if not send_notification:
-            print("Notifier not available. Install pydbus or equivalent.")
+            print("Notifier not available. Install pydbus nerd")
             return
 
         today = date.today()
@@ -251,19 +254,6 @@ class MainWindow(QMainWindow):
 
         if not os.path.exists(updater_path):
             QMessageBox.warning(self, "Update Error", "Updater script not found.")
-            return
-
-        try:
-            url = "https://raw.githubusercontent.com/Soldrion/vibe-coded/main/tracking%20ap/thing_tracker/version.txt"
-            response = requests.get(url, timeout=5)
-            response.raise_for_status()
-            latest_version = response.text.strip()
-        except Exception as e:
-            QMessageBox.warning(self, "Update Check Failed", f"Could not check for updates:\n{e}")
-            return
-
-        if latest_version == self.APP_VERSION:
-            QMessageBox.information(self, "No Updates", "Your app is already up to date.")
             return
 
         try:
