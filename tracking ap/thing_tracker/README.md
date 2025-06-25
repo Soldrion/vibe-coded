@@ -12,7 +12,7 @@ no elevated permissions are required
 
 Supported platforms: Linux, Windows, Mac
 
-### Linux:
+### Linux/Mac/Windows:
 
 You need pyinstaller
 
