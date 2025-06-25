@@ -10,11 +10,15 @@ no elevated permissions are required
 
 ## Installation Instructions
 
-Supported platforms: Linux, Windows, Mac
+Supported platforms: Linux (KDE)
 
-### Linux/Mac/Windows:
+### Prerequisites:
 
-You need pyinstaller
+Python or Python3
+pip
+Pyinstaller
+PyQt5
+pydbus
 
 Run this in your terminal emulator:
 ```
