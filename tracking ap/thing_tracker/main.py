@@ -19,8 +19,7 @@ def check_for_updates(current_version, parent=None):
                     "Update Available",
                     f"A new version is available: {latest}"
                 )
-            elif latest == current_version:
-                print("Up to date")
+            
     except Exception as e:
         print("Update check failed:", e)
 
