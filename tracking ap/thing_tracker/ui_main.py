@@ -16,7 +16,7 @@ from datetime import datetime, date
 try:
     from notifier import send_notification
 except ImportError:
-    send_notification = None  
+    send_notification = None
 
 
 class MainWindow(QMainWindow):
@@ -77,7 +77,7 @@ class MainWindow(QMainWindow):
         input_layout.addWidget(QLabel("End Time:"))
         self.end_time_input = QTimeEdit()
         self.end_time_input.setDisplayFormat("HH:mm")
-        self.end_time_input.setTime(QTime.currentTime().addSecs(3600))  # +1 hour default
+        self.end_time_input.setTime(QTime.currentTime().addSecs(3600))
         input_layout.addWidget(self.end_time_input)
 
         input_layout.addWidget(QLabel("Done?"))
@@ -185,10 +185,10 @@ class MainWindow(QMainWindow):
             self.tree.addTopLevelItem(row)
 
         self.tree.blockSignals(False)
-        self.tree.sortItems(2, Qt.AscendingOrder)  # Sort by Start Date
+        self.tree.sortItems(2, Qt.AscendingOrder)
 
     def handle_item_changed(self, item, column):
-        if column == 7:  # Done checkbox toggled
+        if column == 7:
             name = item.text(0)
             start_date = item.text(2)
             start_time = item.text(3)
@@ -246,12 +246,18 @@ class MainWindow(QMainWindow):
             send_notification("Thing Tracker - Due Tasks", body)
 
     def run_update_helper(self):
-        app_dir = os.path.dirname(os.path.abspath(__file__))
+        # Handle both script and PyInstaller bundle
+        if getattr(sys, 'frozen', False):
+            # PyInstaller sets this flag
+            app_dir = sys._MEIPASS  # temporary extraction dir
+        else:
+            app_dir = os.path.dirname(os.path.abspath(__file__))
+
         updater_path = os.path.join(app_dir, "updater.py")
 
         if not os.path.exists(updater_path):
-            QMessageBox.warning(self, "Update Error", "Updater script not found.")
-            return
+            QMessageBox.warning(self, "Update Error", f"Updater script not found at:\n{updater_path}")
+            return  # FIXED INDENTATION
 
         try:
             url = "https://raw.githubusercontent.com/Soldrion/vibe-coded/main/tracking%20ap/thing_tracker/version.txt"
