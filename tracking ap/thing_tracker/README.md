@@ -31,7 +31,7 @@ and run this to compile the app
 ```
 pyinstaller --onefile --windowed main.py
 ```
-#### Not
+#### Not compiled (for easy modding)
 ```
 python main.py
 ```
