@@ -8,7 +8,6 @@ from PyQt5.QtCore import QTimer
 APP_VERSION = "1.0.0"
 
 def check_for_updates(current_version, parent=None):
-    import requests
     try:
         url = f"https://raw.githubusercontent.com/Soldrion/vibe-coded/main/tracking%20ap/thing_tracker/version.txt?nocache={int(time.time())}"
         response = requests.get(url, timeout=5)
