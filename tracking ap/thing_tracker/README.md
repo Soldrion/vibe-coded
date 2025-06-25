@@ -9,3 +9,24 @@ Vibe coded at first, took on the actual making of it once i understood what was 
 
 
 ## Installation Instructions
+
+Supported platforms: Linux, Windows, Mac
+
+### Linux:
+
+You need pyinstaller
+Run this in your terminal emulator:
+```
+git clone https://github.com/Soldrion/vibe-coded/tree/main
+```
+
+#### Compiled binary
+then cd into thing_tracker...
+and run this to compile the app
+```
+pyinstaller --onefile --windowed main.py
+```
+#### Not
+```
+python main.py
+```
