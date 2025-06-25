@@ -24,7 +24,7 @@ class MainWindow(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Thing Tracker")
+        self.setWindowTitle("Thing Tracker 1.0.1")
         self.setMinimumSize(950, 650)
 
         self.items = load_items()
