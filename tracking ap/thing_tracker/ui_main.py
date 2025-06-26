@@ -20,11 +20,20 @@ except ImportError:
 
 
 class MainWindow(QMainWindow):
-    APP_VERSION = "1.0.0"
+    def load_app_version(self):
+        try:
+            base = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+            version_path = os.path.join(base, "version.txt")
+            with open(version_path, "r") as f:
+                return f.read().strip()
+        except Exception:
+            return "unknown"
 
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Thing Tracker 1.0.1")
+
+        self.APP_VERSION = self.load_app_version()
+        self.setWindowTitle(f"Thing Tracker v{self.APP_VERSION}")
         self.setMinimumSize(950, 650)
 
         self.items = load_items()
@@ -246,36 +255,36 @@ class MainWindow(QMainWindow):
             send_notification("Thing Tracker - Due Tasks", body)
 
     def run_update_helper(self):
-        # Handle both script and PyInstaller bundle
         if getattr(sys, 'frozen', False):
-            # PyInstaller sets this flag
-            app_dir = sys._MEIPASS  # temporary extraction dir
+            # Running as PyInstaller binary
+            app_dir = os.path.dirname(sys.executable)
         else:
             app_dir = os.path.dirname(os.path.abspath(__file__))
 
-        updater_path = os.path.join(app_dir, "updater.py")
+        updater_path = os.path.join(app_dir, "updater")
 
         if not os.path.exists(updater_path):
-            QMessageBox.warning(self, "Update Error", f"Updater script not found at:\n{updater_path}")
-            return  # FIXED INDENTATION
+            # If updater is a .exe on Windows, add .exe extension
+            if sys.platform == "win32":
+                updater_path_exe = updater_path + ".exe"
+                if os.path.exists(updater_path_exe):
+                    updater_path = updater_path_exe
+                else:
+                    QMessageBox.warning(self, "Update Error", f"Updater binary not found at:\n{updater_path} or {updater_path_exe}")
+                    return
+            else:
+                QMessageBox.warning(self, "Update Error", f"Updater binary not found at:\n{updater_path}")
+                return
+
+        # Optionally check for updates here before running updater
 
         try:
-            url = "https://raw.githubusercontent.com/Soldrion/vibe-coded/main/tracking%20ap/thing_tracker/version.txt"
-            response = requests.get(url, timeout=5)
-            response.raise_for_status()
-            latest_version = response.text.strip()
-        except Exception as e:
-            QMessageBox.warning(self, "Update Check Failed", f"Could not check for updates:\n{e}")
-            return
-
-        if latest_version == self.APP_VERSION:
-            QMessageBox.information(self, "No Updates", "Your app is already up to date.")
-            return
-
-        try:
-            subprocess.Popen([sys.executable, updater_path, app_dir])
+            subprocess.Popen([updater_path, app_dir])
         except Exception as e:
             QMessageBox.warning(self, "Update Error", f"Failed to start updater:\n{e}")
             return
 
-        QApplication.quit()
+        # Close the app after launching updater
+        app = QApplication.instance()
+        if app:
+            app.quit()

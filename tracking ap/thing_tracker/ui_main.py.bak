@@ -246,34 +246,23 @@ class MainWindow(QMainWindow):
             send_notification("Thing Tracker - Due Tasks", body)
 
     def run_update_helper(self):
-        # Handle both script and PyInstaller bundle
         if getattr(sys, 'frozen', False):
-            # PyInstaller sets this flag
-            app_dir = sys._MEIPASS  # temporary extraction dir
+            app_dir = os.path.dirname(sys.executable)
+            updater_filename = "updater.exe" if sys.platform.startswith("win") else "updater"
+            updater_path = os.path.join(app_dir, updater_filename)
         else:
             app_dir = os.path.dirname(os.path.abspath(__file__))
-
-        updater_path = os.path.join(app_dir, "updater.py")
+            updater_path = os.path.join(app_dir, "updater.py")
 
         if not os.path.exists(updater_path):
             QMessageBox.warning(self, "Update Error", f"Updater script not found at:\n{updater_path}")
-            return  # FIXED INDENTATION
-
-        try:
-            url = "https://raw.githubusercontent.com/Soldrion/vibe-coded/main/tracking%20ap/thing_tracker/version.txt"
-            response = requests.get(url, timeout=5)
-            response.raise_for_status()
-            latest_version = response.text.strip()
-        except Exception as e:
-            QMessageBox.warning(self, "Update Check Failed", f"Could not check for updates:\n{e}")
-            return
-
-        if latest_version == self.APP_VERSION:
-            QMessageBox.information(self, "No Updates", "Your app is already up to date.")
             return
 
         try:
-            subprocess.Popen([sys.executable, updater_path, app_dir])
+            if getattr(sys, 'frozen', False):
+                subprocess.Popen([updater_path, app_dir])
+            else:
+                subprocess.Popen([sys.executable, updater_path, app_dir])
         except Exception as e:
             QMessageBox.warning(self, "Update Error", f"Failed to start updater:\n{e}")
             return
