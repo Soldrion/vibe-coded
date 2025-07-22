@@ -29,7 +29,7 @@ git clone https://github.com/Soldrion/vibe-coded/tree/main
 then cd into thing_tracker...
 and run this to compile the app
 ```
-pyinstaller --onefile --windowed main.py
+pyinstaller --onefile --add-data:."ui_main.py" main.py
 ```
 #### Not compiled (for easy modding)
 ```
