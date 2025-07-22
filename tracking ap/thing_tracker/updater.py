@@ -1,5 +1,6 @@
 import sys
-import os
+import subprocess
+import os 
 import shutil
 import tempfile
 import requests
@@ -59,14 +60,13 @@ def restart_app(app_dir):
         if getattr(sys, 'frozen', False):
             # Relaunch the executable
             if sys.platform == "win32":
-                CREATE_NO_WINDOW = 0x08000000
-                DETACHED_PROCESS = 0x00000008
-                subprocess.Popen([sys.executable], creationflags=CREATE_NO_WINDOW | DETACHED_PROCESS)
+                 print("fuck you")
             else:
                 import os
                 import subprocess
                 subprocess.Popen([sys.executable], preexec_fn=os.setsid)
         else:
+            print("Linux")
             main_py = os.path.join(app_dir, "main.py")
             if os.path.exists(main_py):
                 subprocess.Popen([sys.executable, main_py])
@@ -93,6 +93,6 @@ def main():
 
     restart_app(app_dir)
     log_message("=== Update done ===")
-
+    print(sys.platform)
 if __name__ == "__main__":
     main()

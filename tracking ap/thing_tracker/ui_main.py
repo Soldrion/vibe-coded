@@ -60,6 +60,12 @@ class MainWindow(QMainWindow):
         self.tag_input.setPlaceholderText("tag1, tag2")
         input_layout.addWidget(self.tag_input)
 
+        input_layout.addWidget(QLabel("Repeating?"))
+        self.repeat_input = QComboBox()
+        self.repeat_input.addItems(["None", "Daily", "Weekly", "Fortnightly", "Monthly", "Yearly"])
+        input_layout.addWidget(self.repeat_input)
+
+
         input_layout.addWidget(QLabel("Priority:"))
         self.priority_input = QComboBox()
         self.priority_input.addItems(["Low", "Medium", "High"])
@@ -100,7 +106,6 @@ class MainWindow(QMainWindow):
         self.update_button = QPushButton("Update App")
         self.update_button.clicked.connect(self.run_update_helper)
         input_layout.addWidget(self.update_button)
-
         self.notify_button = QPushButton("Check Notifications")
         self.notify_button.clicked.connect(self.check_notifications)
         input_layout.addWidget(self.notify_button)

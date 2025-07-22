@@ -33,7 +33,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = MainWindow()
     window.show()
-
+    print(sys.platform)
     check_for_updates(APP_VERSION, parent=window)
 
     sys.exit(app.exec_())
