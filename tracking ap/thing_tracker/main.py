@@ -5,7 +5,7 @@ import requests
 from PyQt5.QtWidgets import QApplication, QMessageBox
 from ui_main import MainWindow
 
-APP_VERSION = "1.0.6"
+APP_VERSION = "1.1.6"
 
 def check_for_updates(current_version, parent=None):
     try:
@@ -18,6 +18,8 @@ def check_for_updates(current_version, parent=None):
             print(latest)
 
             if latest != current_version:
+                print("need update")
+                print(latest, current_version)
                 QMessageBox.information(
                     parent,
                     "Update Available",
