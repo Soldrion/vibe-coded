@@ -1,19 +1,3 @@
-# vibe coded projects
-I didnt actually truly vibe code, just asked the gipity how to use Qt
-
-:
-
-:
-
-:
-
-:
-
-:
-
-
-
-
 # Thing Tracker
 
 Thing Tracker is this little app I made to track tasks for me.
@@ -26,7 +10,7 @@ no elevated permissions are required
 
 ## Installation Instructions
 
-Supported platforms: Linux (Qt)
+Supported platforms: Linux (KDE)
 
 ### Prerequisites:
 
@@ -51,3 +35,15 @@ pyinstaller --onefile --add-data "ui_main.py:." main.py
 ```
 python main.py
 ```
+
+## Updating
+Updating is a two-step process.
+
+#### Step 1
+Move the binaries and rebuild script into an isolated file.
+#### Step 2
+Open main, then press update. This will make a bunch of .py, .py.bak, and .spec files. Don't worry about them, unless you want to mod the app.
+#### Step 3
+Run the rebuild script in your console.
+#### Step 4 
+Exit it and move the binaries where you want.
