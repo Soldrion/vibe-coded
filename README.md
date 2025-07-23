@@ -26,7 +26,7 @@ no elevated permissions are required
 
 ## Installation Instructions
 
-Supported platforms: Linux (KDE)
+Supported platforms: Linux (Qt)
 
 ### Prerequisites:
 
