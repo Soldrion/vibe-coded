@@ -20,6 +20,12 @@ Pyinstaller
 PyQt5
 pydbus
 
+#### Download binaries here:
+https://github.com/Soldrion/vibe-coded/releases
+
+
+#### Build from source:
+
 Run this in your terminal emulator:
 ```
 git clone https://github.com/Soldrion/vibe-coded/tree/main
