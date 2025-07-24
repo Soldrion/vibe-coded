@@ -43,10 +43,10 @@ python main.py
 ```
 
 ## Updating
-Updating is a two-step process.
+Updating is a four step process.
 
-#### Step 1
-Move the binaries and rebuild script into an isolated file.
+#### Step 1 (Optional, but recommended)
+Move the binaries and rebuild script into a new or otherwise isolated file.
 #### Step 2
 Open main, then press update. This will make a bunch of .py, .py.bak, and .spec files. Don't worry about them, unless you want to mod the app.
 #### Step 3
